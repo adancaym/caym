@@ -1,5 +1,7 @@
 <?php namespace Config;
 
+use CodeIgniter\Core\Host;
+
 /**
  * --------------------------------------------------------------------
  * URI Routing
@@ -19,6 +21,10 @@
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes(true);
+
+$request = Services::request();
+
+$HostController = new Host($request->getServer());
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
@@ -57,9 +63,10 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
  * Controllers when no specific route has been defined. If false,
  * only routes that have been defined here will be available.
  */
-$routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
-$routes->setDefaultMethod('index');
+
+$routes->setDefaultNamespace($HostController->getNameSpace());
+$routes->setDefaultController($HostController->getController());
+$routes->setDefaultMethod($HostController->getMethod());
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
@@ -72,7 +79,15 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+
+//$routes->get('/','Home::saluda');
+
+$rutas = $HostController->getRutas();
+
+foreach ($rutas as $ruta)
+{
+	$routes->add($ruta->ruta, $ruta->controller . '::' . $ruta->method);
+}
 
 /**
  * --------------------------------------------------------------------

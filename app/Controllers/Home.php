@@ -9,6 +9,10 @@ class Home extends Controller
 		return view('welcome_message');
 	}
 
+	public function saluda()
+	{
+		echo 'hola';
+	}
 	//--------------------------------------------------------------------
 
 }
