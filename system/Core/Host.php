@@ -13,11 +13,13 @@ use App\Models\HostsModel;
 class Host
 {
 	private $http_host;
+	private $contexto;
 
 	public function __construct($host)
 	{
 		$hostModel       = new HostsModel();
 		$this->http_host = $hostModel->getHostByHost($host['HTTP_HOST']);
+		$this->contexto  = $host['HTTP_HOST'];
 	}
 
 	public function getCuenta()
@@ -52,6 +54,14 @@ class Host
 	public function getTemplate()
 	{
 		$this->getHost()->getTemplate();
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getContexto()
+	{
+		return $this->contexto;
 	}
 
 }

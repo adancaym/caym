@@ -24,7 +24,10 @@ $routes = Services::routes(true);
 
 $request = Services::request();
 
+$session = Services::session();
+
 $HostController = new Host($request->getServer());
+$session->set('host', $HostController);
 
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
@@ -64,9 +67,9 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php'))
  * only routes that have been defined here will be available.
  */
 
-$routes->setDefaultNamespace($HostController->getNameSpace());
-$routes->setDefaultController($HostController->getController());
-$routes->setDefaultMethod($HostController->getMethod());
+$routes->setDefaultNamespace($session->host->getNameSpace());
+$routes->setDefaultController($session->host->getController());
+$routes->setDefaultMethod($session->host->getMethod());
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
@@ -82,7 +85,7 @@ $routes->setAutoRoute(true);
 
 //$routes->get('/','Home::saluda');
 
-$rutas = $HostController->getRutas();
+$rutas = $session->host->getRutas();
 
 foreach ($rutas as $ruta)
 {
